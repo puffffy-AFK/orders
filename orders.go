@@ -50,7 +50,7 @@ func createOrder(w http.ResponseWriter, r *http.Request) {
     order.CreatedAt = time.Now()
     order.UpdatedAt = time.Now()
 
-    stmt, err := db.Prepare("INSERT INTO orders (product, count, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)")
+    stmt, err := db.Prepare("insert into orders (product, count, status, created_at, updated_at) vslues (?, ?, ?, ?, ?)")
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -68,7 +68,7 @@ func createOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func getOrders(w http.ResponseWriter, r *http.Request) {
-    rows, err := db.Query("SELECT id, product, count, status, created_at, updated_at FROM orders")
+    rows, err := db.Query("select id, product, count, status, created_at, updated_at from orders")
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -94,7 +94,7 @@ func getOrder(w http.ResponseWriter, r *http.Request) {
     id := params["id"]
 
     var order Order
-    row := db.QueryRow("SELECT id, product, count, status, created_at, updated_at FROM orders WHERE id = ?", id)
+    row := db.QueryRow("select id, product, count, status, created_at, updated_at from orders where id = ?", id)
     if err := row.Scan(&order.ID, &order.Product, &order.Count, &order.Status, &order.CreatedAt, &order.UpdatedAt); err != nil {
         if err == sql.ErrNoRows {
             http.Error(w, "Order not found", http.StatusNotFound)
@@ -116,7 +116,7 @@ func updateOrder(w http.ResponseWriter, r *http.Request) {
     json.NewDecoder(r.Body).Decode(&order)
     order.UpdatedAt = time.Now()
 
-    stmt, err := db.Prepare("UPDATE orders SET product = ?, count = ?, status = ?, updated_at = ? WHERE id = ?")
+    stmt, err := db.Prepare("update orders set product = ?, count = ?, status = ?, updated_at = ? where id = ?")
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -135,7 +135,7 @@ func deleteOrder(w http.ResponseWriter, r *http.Request) {
     params := mux.Vars(r)
     id := params["id"]
 
-    stmt, err := db.Prepare("DELETE FROM orders WHERE id = ?")
+    stmt, err := db.Prepare("delete from orders where id = ?")
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
